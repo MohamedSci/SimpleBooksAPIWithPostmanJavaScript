@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
-      - uses: matt-ball/newman-action@main
+      - uses: matt-ball/newman-action@postman
         with:
           apiKey: ${{ secrets.postmanApiKey }}
           collection: Book_collection.postman_collection.json
