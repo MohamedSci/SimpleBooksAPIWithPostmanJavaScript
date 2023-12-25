@@ -3,7 +3,7 @@ name: Newman Run
 on:
   pull_request:
     branches:
-    - master
+    - main
 
 jobs:
   newman:
@@ -13,5 +13,5 @@ jobs:
       - uses: matt-ball/newman-action@master
         with:
           apiKey: ${{ secrets.postmanApiKey }}
-          collection: postman_collection.json
+          collection: Book_collection.postman_collection.json
           environment: 5922408-228c7edd-fc15-4f68-9665-a35d7df6945b
