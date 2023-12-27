@@ -14,10 +14,10 @@ jobs:
 
 
       # INstall Node on the runner
-      - name: Install Node
-        uses: actions/setup-node@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: "16.x"
+          node-version: '16'
 
 
       # Install the newman command line utility and also install the html extra reporter
