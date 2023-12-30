@@ -2,8 +2,7 @@ name: Run Newman
 
 on:
   schedule:
-    - cron: '0 1-23 * * *'
-    - cron: '0 0 * * *'
+    - cron: '0 6 * * *'
 
 jobs:
   test:
