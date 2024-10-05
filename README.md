@@ -213,5 +213,8 @@ We welcome contributions! To contribute to this project:
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ---
+## [Buy me a Coffee☕](<https://ko-fi.com/mohamedsaidibrahim>)
+
+If you enjoy this content and want to support me, feel free to [buy me a coffee](<https://ko-fi.com/mohamedsaidibrahim>)
 
 Happy testing with Postman and JavaScript! 🚀
