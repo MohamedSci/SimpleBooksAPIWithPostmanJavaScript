@@ -1,4 +1,4 @@
-name: Run Postman Collection
+name: Run Postman Collection and Publish HTML Report
 
 on:
   schedule:
@@ -10,48 +10,61 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step to check out the repository code
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # Step to set up Node.js environment
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '20.12.2'
 
-      # Step to install Newman globally
-      - run: npm install -g newman
+      - name: Install Newman and Reporters
+        run: |
+          npm install -g newman newman-reporter-json newman-reporter-html
 
-      # Step to run the Postman collection
-      - run: newman run collections\SimpleBooksAPIWithPostmanJavaScript.postman_collection.json -r json,cli --reporter-json-export result.json
-      
-      # Step to upload the result as an artifact
+      - name: Run Postman Collection
+        run: |
+          npx newman run collections/SimpleBooksAPIWithPostmanJavaScript.postman_collection.json -r json,html,cli --reporter-json-export=result.json --reporter-html-export=newman-report.html
+
       - name: Upload Result
         uses: actions/upload-artifact@v2
         with:
           name: postman-collection-result
-          path: result.json
+          path: |
+            result.json
+            newman-report.html
+
+      - name: Create directory for GitHub Pages
+        run: |
+          mkdir -p ./gh-pages
+          mv newman-report.html ./gh-pages/index.html
+
+      - name: Upload to GitHub Pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{secrets.PAGES_TOKEN}}
+          publish_dir: ./gh-pages
 
   update-readme:
     runs-on: ubuntu-latest
     
     steps:
-      # Step to check out the repository code
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # Step to update the README with the test results
       - name: Update README
         run: |
           echo "## Test Results" >> README.md
           echo "\`\`\`json" >> README.md
           cat result.json >> README.md
           echo "\`\`\`" >> README.md
+          echo "\n### HTML Report" >> README.md
+          echo "[View HTML Report](https://MohamedSci.github.io/SimpleBooksAPIWithPostmanJavaScript/)" >> README.md
 
-      # Step to commit and push the changes to the README
       - name: Commit Changes
         run: |
           git config --local user.name "Mohamed Said Ibrahim (MohamedSci)"
-          git config --local user.email "mohamed.sci@example.com"  # Use your real email here
+          git config --local user.email "muhammedsaidsyed215@gmail.com" # Use your email here
           git add README.md
           git commit -m "Update README with Postman collection results"
           git push
