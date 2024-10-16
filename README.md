@@ -105,9 +105,7 @@ This project automates API testing for the [Simple Books API](https://simple-boo
 ```plaintext
 postman/
 ├── collections/
-│   └── SimpleBooksAPI.postman_collection.json   # Postman collection file containing all API requests
-├── environment/
-│   └── SimpleBooksAPI.postman_environment.json  # Environment variables (e.g., tokens, base URLs)
+│   └── collections\SimpleBooksAPIWithPostmanJavaScript.postman_collection.json   # Postman collection file containing all API requests
 ├── scripts/
 │   └── pre-request.js   # JavaScript for dynamic test data generation and token management
 │   └── test-scripts.js  # JavaScript assertions for validating API responses
@@ -133,17 +131,14 @@ postman/
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/your-username/simple-books-api-postman-automation.git
-    cd simple-books-api-postman-automation
+    git clone https://github.com/MohamedSci/SimpleBooksAPIWithPostmanJavaScript.git
+    cd SimpleBooksAPIWithPostmanJavaScript
     ```
 
 2. **Import Collection**:
-    - Open Postman, click on **Import**, and choose the `SimpleBooksAPI.postman_collection.json` file from the `postman/collections/` directory.
+    - Open Postman, click on **Import**, and choose the `collections\SimpleBooksAPIWithPostmanJavaScript.postman_collection.json` file from the `postman/collections/` directory.
 
-3. **Import Environment**:
-    - Import the `SimpleBooksAPI.postman_environment.json` file from the `postman/environment/` directory to set up the required environment variables.
-
-4. **Set API Token**:
+3. **Set API Token**:
     - In the environment, replace the placeholder `{{token}}` with your actual Bearer token obtained via the `/api-clients` endpoint.
 
 ---
@@ -162,7 +157,7 @@ postman/
 To run the collection via the command line using Newman, execute:
 
 ```bash
-newman run postman/collections/SimpleBooksAPI.postman_collection.json -e postman/environment/SimpleBooksAPI.postman_environment.json
+newman run collections\SimpleBooksAPIWithPostmanJavaScript.postman_collection.json -r json,cli --reporter-json-export result.json
 ```
 
 ---
@@ -172,16 +167,15 @@ newman run postman/collections/SimpleBooksAPI.postman_collection.json -e postman
 Newman supports generating detailed HTML and JSON reports for the executed test cases. To generate an HTML report, run:
 
 ```bash
-newman run postman/collections/SimpleBooksAPI.postman_collection.json -e postman/environment/SimpleBooksAPI.postman_environment.json -r html --reporter-html-export newman-report.html
+newman run collections\SimpleBooksAPIWithPostmanJavaScript.postman_collection.json -r json,html,cli --reporter-json-export result.json --reporter-html-export newman-report.html
+
 ```
 
 This will generate a `newman-report.html` file containing the execution summary, request details, and pass/fail results for each test case.
 
 ---
 
-## SEO Keywords
-
-For optimal search engine optimization (SEO) and discoverability, the following keywords are targeted:
+## This Project About
 
 - Postman API automation
 - JavaScript API testing

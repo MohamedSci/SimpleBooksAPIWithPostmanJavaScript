@@ -23,7 +23,7 @@ jobs:
       - run: npm install -g newman
 
       # Step to run the Postman collection
-      - run: newman run SimpleBooksAPIWithPostmanJavaScript.json -r json,cli --reporter-json-export result.json
+      - run: newman run collections\SimpleBooksAPIWithPostmanJavaScript.postman_collection.json -r json,cli --reporter-json-export result.json
       
       # Step to upload the result as an artifact
       - name: Upload Result
