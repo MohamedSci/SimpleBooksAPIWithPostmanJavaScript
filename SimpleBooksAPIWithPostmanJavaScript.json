@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "97a57f6b-59bc-4e35-9044-47e129c6199d",
-		"name": "Book_collection",
+		"name": "SimpleBooksAPIWithPostmanJavaScript",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24993660"
 	},
@@ -21,10 +21,35 @@
 							"    var responseData = pm.response.json();\r",
 							"    var accessToken = responseData.accessToken; \r",
 							"    console.log(\"Access Token ***********---------- \"+accessToken);\r",
-							"    pm.collectionVariables.set(\"auth\",accessToken);\r",
+							"    pm.environment.set(\"auth\",accessToken);\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.test(\"Generate Random Client Name and Email\",()=>{\r",
+							"// Generate a random email using the current timestamp\r",
+							"const randomNum = Math.floor(Math.random() * 100000);\r",
+							"const randomName= 'testuser_'+randomNum;\r",
+							"const randomEmail = randomName+'@example.com';\r",
+							"\r",
+							"// Assign the generated Name to an environment variable\r",
+							"pm.collectionVariables.set(\"clientName\", randomName);\r",
+							"// Assign the generated email to an environment variable\r",
+							"pm.collectionVariables.set(\"clientEmail\", randomEmail);\r",
+							"\r",
+							"// Log the Name and Email for visibility\r",
+							"console.log(\"Generated Name: \" + randomName);\r",
+							"console.log(\"Generated Email: \" + randomEmail);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -43,7 +68,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "\r\n{\r\n   \"clientName\": \"Postman0158\",\r\n   \"clientEmail\": \"Postman0158@example.com\"\r\n}",
+					"raw": "\r\n{\r\n   \"clientName\": \"{{clientName}}\",\r\n   \"clientEmail\": \"{{clientEmail}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -51,13 +76,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/api-clients/",
+					"raw": "{{baseURL}}/api-clients",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
-						"api-clients",
-						""
+						"api-clients"
 					]
 				}
 			},
@@ -130,13 +154,14 @@
 							"    var bName = responseJson[0].name;\r",
 							"    var bType = responseJson[0].type;\r",
 							"    var bAvailable = responseJson[0].available;\r",
-							"pm.collectionVariables.set(\"bID\", bID);\r",
-							"pm.collectionVariables.set(\"bName\", bName);\r",
-							"pm.collectionVariables.set(\"bType\", bType);\r",
-							"pm.collectionVariables.set(\"bAvailable\", bAvailable);\r",
+							"pm.collectionVariables.set(\"bookID\", bID);\r",
+							"pm.collectionVariables.set(\"bookName\", bName);\r",
+							"pm.collectionVariables.set(\"bookType\", bType);\r",
+							"pm.collectionVariables.set(\"bookAvailable\", bAvailable);\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -159,7 +184,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/books",
+					"raw": "{{baseURL}}/books?type={{bookType}}&limit={{bookLimit}}",
 					"host": [
 						"{{baseURL}}"
 					],
@@ -169,13 +194,11 @@
 					"query": [
 						{
 							"key": "type",
-							"value": "non-fiction",
-							"disabled": true
+							"value": "{{bookType}}"
 						},
 						{
 							"key": "limit",
-							"value": "2",
-							"disabled": true
+							"value": "{{bookLimit}}"
 						}
 					]
 				}
@@ -196,14 +219,25 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Validate that the response has valid data\",function(){\r",
-							"pm.expect(responseJson.id).to.equal(pm.collectionVariables.get(\"bID\"));\r",
-							"pm.expect(responseJson.name).to.equal(pm.collectionVariables.get(\"bName\"));\r",
-							"pm.expect(responseJson.type).to.equal(pm.collectionVariables.get(\"bType\"));\r",
-							"pm.expect(responseJson.available).to.equal(pm.collectionVariables.get(\"bAvailable\"));\r",
+							"pm.expect(responseJson.id).to.equal(pm.collectionVariables.get(\"bookID\"));\r",
+							"pm.expect(responseJson.name).to.equal(pm.collectionVariables.get(\"bookName\"));\r",
+							"pm.expect(responseJson.type).to.equal(pm.collectionVariables.get(\"bookType\"));\r",
+							"pm.expect(responseJson.available).to.equal(pm.collectionVariables.get(\"bookAvailable\"));\r",
 							"\r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -226,25 +260,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/books/{{bID}}",
+					"raw": "{{baseURL}}/books/{{bookID}}",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"books",
-						"{{bID}}"
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "non-fiction",
-							"disabled": true
-						},
-						{
-							"key": "limit",
-							"value": "2",
-							"disabled": true
-						}
+						"{{bookID}}"
 					]
 				}
 			},
@@ -257,19 +279,20 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"var bID = pm.collectionVariables.get(\"bID\");\r",
+							"var bID = pm.collectionVariables.get(\"bookID\");\r",
 							"console.log(\"Submit An Order precondition --- get collection variables \"+bID);\r",
 							"var bID = parseInt(bID)+1;\r",
 							"\r",
 							"if(bID <= 12){\r",
 							"var bID = JSON.stringify(bID);\r",
 							"console.log(\"Submit An Order precondition ---*** Modifcation of bID and bName\"+ JSON.stringify(bID));\r",
-							"pm.collectionVariables.set(\"bID\",bID);\r",
-							"pm.collectionVariables.set(\"bName\",\"\");\r",
+							"pm.collectionVariables.set(\"bookID\",bID);\r",
+							"pm.collectionVariables.set(\"bookName\",\"\");\r",
 							"}\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				},
 				{
@@ -279,12 +302,14 @@
 							"pm.test(\"Status code is 201\", function () {\r",
 							"    pm.response.to.have.status(201);\r",
 							"});\r",
+							"\r",
 							"pm.test(\"assign Order Id to variable\",function(){\r",
 							"        var responseJSON = pm.response.json();\r",
 							"   pm.collectionVariables.set(\"orderId\",responseJSON.orderId);     \r",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -303,7 +328,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "\r\n{\r\n  \"bookId\": \"{{bID}}\",\r\n  \"customerName\": \"{{bName}} {{bID}}\"\r\n}",
+					"raw": "{\r\n  \"bookId\": \"{{bookID}}\",\r\n  \"customerName\": \"{{bookName}} {{bookID}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -317,18 +342,6 @@
 					],
 					"path": [
 						"orders"
-					],
-					"query": [
-						{
-							"key": "bookId",
-							"value": "",
-							"disabled": true
-						},
-						{
-							"key": "customerName",
-							"value": "mohamedSc",
-							"disabled": true
-						}
 					]
 				}
 			},
@@ -394,22 +407,35 @@
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
-							"pm.test(\"Check if Submitted Order in The Get All Orders response\",function(){\r",
+							"\r",
+							"pm.test(\"Check if Submitted Order in The Get All Orders response\",()=>{\r",
 							"var responseJSON = pm.response.json();\r",
 							"var idsList = [];\r",
+							"var orderID =pm.collectionVariables.get(\"orderId\");\r",
 							"for(var i=0; i < responseJSON.length; i++){\r",
 							"idsList.push(responseJSON[i].id);\r",
 							"}\r",
 							"console.log(\"idsList *** \"+ idsList);\r",
 							"console.log(idsList);\r",
-							"pm.expect(idsList).to.include(pm.collectionVariables.get(\"oID\"));\r",
+							"pm.expect(idsList).to.include(orderID);\r",
 							"});\r",
 							"\r",
 							"\r",
 							"\r",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -448,14 +474,24 @@
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
+							"\r",
 							"var responseJson = pm.response.json();\r",
 							"\r",
-							"pm.test(\"Check the Order is Submitted with thr right Book\",function(){\r",
-							"pm.expect(JSON.stringify(responseJson.bookId)).to.equal(pm.collectionVariables.get(\"bID\"));\r",
+							"pm.test(\"Check the Order is Submitted with thr right Book\",()=>{\r",
+							"pm.expect(JSON.stringify(responseJson.bookId)).to.equal(\r",
+							"    pm.collectionVariables.get(\"bookID\"));\r",
 							"});\r",
 							"\r",
 							""
 						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
 						"type": "text/javascript"
 					}
 				}
@@ -556,44 +592,47 @@
 		},
 		{
 			"key": "auth",
-			"value": "",
+			"value": "783604b42307bc5656db297fc2542f7856544e01fbac979e0d979f679e2b7c1e",
 			"type": "string"
 		},
 		{
 			"key": "orderId",
-			"value": "",
+			"value": "BRQguSC6EqCYeyJVstdfG",
 			"type": "string"
 		},
 		{
-			"key": "bID",
-			"value": ""
+			"key": "bookID",
+			"value": 2
 		},
 		{
-			"key": "bName",
-			"value": ""
+			"key": "bookName",
+			"value": "Just as I Am"
 		},
 		{
-			"key": "bType",
-			"value": ""
+			"key": "bookType",
+			"value": "non-fiction"
 		},
 		{
-			"key": "bAvailable",
-			"value": ""
+			"key": "bookAvailable",
+			"value": false
 		},
 		{
 			"key": "statusMessage",
-			"value": ""
+			"value": "OK"
 		},
 		{
-			"key": "bId",
-			"value": ""
+			"key": "clientName",
+			"value": "testuser_37284"
 		},
 		{
-			"key": "oID",
-			"value": ""
+			"key": "clientEmail",
+			"value": "testuser_37284@example.com",
+			"type": "string"
 		},
 		{
-			"value": ""
+			"key": "bookLimit",
+			"value": "1",
+			"type": "string"
 		}
 	]
 }

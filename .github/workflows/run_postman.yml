@@ -1,0 +1,57 @@
+name: Run Postman Collection
+
+on:
+  schedule:
+    # Runs on the 17th day of every month at 6:30 AM UTC
+    - cron: '30 6 17 * *'
+
+jobs:
+  run-collection:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step to check out the repository code
+      - uses: actions/checkout@v2
+
+      # Step to set up Node.js environment
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      # Step to install Newman globally
+      - run: npm install -g newman
+
+      # Step to run the Postman collection
+      - run: newman run SimpleBooksAPIWithPostmanJavaScript.json -r json,cli --reporter-json-export result.json
+      
+      # Step to upload the result as an artifact
+      - name: Upload Result
+        uses: actions/upload-artifact@v2
+        with:
+          name: postman-collection-result
+          path: result.json
+
+  update-readme:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step to check out the repository code
+      - uses: actions/checkout@v2
+
+      # Step to update the README with the test results
+      - name: Update README
+        run: |
+          echo "## Test Results" >> README.md
+          echo "\`\`\`json" >> README.md
+          cat result.json >> README.md
+          echo "\`\`\`" >> README.md
+
+      # Step to commit and push the changes to the README
+      - name: Commit Changes
+        run: |
+          git config --local user.name "Mohamed Said Ibrahim (MohamedSci)"
+          git config --local user.email "mohamed.sci@example.com"  # Use your real email here
+          git add README.md
+          git commit -m "Update README with Postman collection results"
+          git push
